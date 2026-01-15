@@ -1,0 +1,15 @@
+{
+  "langrev": "1",
+  "warnings": [ "no-unused" ],
+  "authors": [ "Kiana Bennett" ],
+  "version": "0.1.0",
+  "sources": [ "src/**" ],
+  "output": "build",
+  "targets": {
+    "c3build": {
+      "type": "executable"
+	}
+  },
+  "cpu": "generic",
+  "opt": "O0"
+}

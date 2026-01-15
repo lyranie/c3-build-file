@@ -1,0 +1,19 @@
+compiler(VERSION MIN 0.7.1 MAX 0.7.9)
+project(c3build VERSION 0.1.0)
+
+task("install")
+    print("Installing...")
+    remove(DIR "$(HOME)/$(PROJECT)")
+    create(DIR "$(HOME)/$(PROJECT)")
+    copy(FILE "build/$(PROJECT)" "$(HOME)/$(PROJECT)/$(PROJECT)")
+    ifdef(OS_LINUX)
+        cmd("chmod +x $(HOME)/$(PROJECT)/$(PROJECT)")
+    endif()
+    ifdef(OS_DARWIN)
+        cmd("chmod +x $(HOME)/$(PROJECT)/$(PROJECT)")
+    endif()
+endtask()
+
+add("src/")
+
+program(c3build)
