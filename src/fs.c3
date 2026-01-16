@@ -150,7 +150,7 @@ fn String[]? get_search_dirs(Type type)
     return dirs.to_array(mem);
 }
 
-fn int search_thread(void* arg)
+fn int search_thread(void* arg) => @pool_init(mem, 1024)
 {
     SearchThreadData* data         = (SearchThreadData*)arg;
     int               local_score  = -1;
@@ -271,7 +271,7 @@ fn bool is_executable(String path)
     $else
         Stat stat;
         os::native_stat(&stat, path)!!;
-        return libc_S_ISTYPE(stat.st_mode, libc::S_IXUSR);
+        return true && stat.st_mode & libc::S_IXUSR;
     $endif
 }
 

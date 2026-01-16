@@ -1,5 +1,13 @@
 compiler(VERSION MIN 0.7.1 MAX 0.7.9)
-project(c3build VERSION 0.2.0)
+project(c3build VERSION 0.2.1)
+
+find(EXE "git")
+
+option("--trust=full")
+
+ifdef(exe_git)
+    option("-D GIT_HASH")
+endif()
 
 task("install")
     print("Installing...")

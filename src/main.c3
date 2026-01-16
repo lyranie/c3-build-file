@@ -9,6 +9,7 @@ import parser;
 import sema;
 import visitor;
 import token;
+import version;
 
 fn int main(String[] args)
 {
@@ -18,6 +19,13 @@ fn int main(String[] args)
             args[1] == "-h")
         {
             print_help(args[0]);
+            return 0;
+        }
+
+        if (args[1] == "--version" ||
+            args[1] == "-v")
+        {
+            print_version();
             return 0;
         }
     }
@@ -116,8 +124,9 @@ fn void print_help(String program)
 {
     io::printfn("Usage: %s [command]", program);
     io::printn("Commands:");
-    io::printn("  --help  -h       Shows usage help.");
-    io::printn("  --tasks -t       Shows tasks.");
+    io::printn("  --help    -h       Shows usage help.");
+    io::printn("  --tasks   -t       Shows tasks.");
+    io::printn("  --version -v       Shows version info.");
     io::printn("  <task>           Runs the specified task.");
     os::exit(1);
 }
@@ -130,4 +139,12 @@ fn void print_tasks(ProjectInfo info)
         io::printfn("  %s", task);
     }
     os::exit(0);
+}
+
+fn void print_version()
+{
+    io::printfn("Version:        %s", version::VERSION);
+    $if $feature(GIT_HASH):
+    io::printfn("Git Hash:       %s", version::GIT_HASH);
+    $endif
 }

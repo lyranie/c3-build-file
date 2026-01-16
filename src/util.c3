@@ -168,4 +168,4 @@ fn void add_files(List{ASTNode*} paths, ProjectInfo* info)
     }
 }
 
-fn String String.join(self, String other) => string::format(mem, "%s%s%s", self, path::PREFERRED_SEPARATOR, other);
+fn String String.join(self, String other) => string::format(mem, "%s%c%s", self, path::PREFERRED_SEPARATOR, other);
