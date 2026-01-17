@@ -96,7 +96,8 @@ fn ASTNode* parse_compiler(Token[] tokens, int* pos)
 fn ASTNode* parse_project(Token[] tokens, int* pos)
 {
     ASTNode* node    = malloc(ASTNode.sizeof);
-    ASTNode* version = malloc(ASTNode.sizeof);
+    ASTNode* version = null;
+    ASTNode* author  = null;
 
     consume(tokens, pos, TokenType.PROJECT);
     consume(tokens, pos, TokenType.LPAREN);
@@ -104,14 +105,41 @@ fn ASTNode* parse_project(Token[] tokens, int* pos)
     String name = current(tokens, *pos).value;
 
     consume(tokens, pos, TokenType.IDENT);
-    consume(tokens, pos, TokenType.KW_VERSION);
 
-    *version = { NodeType.VERSION, { .version_node = { .type = VersionType.EXACT, .exact_version = current(tokens, *pos).value } } };
+    Token cur = current(tokens, *pos);
+    if (cur.type == TokenType.KW_VERSION ||
+        cur.type == TokenType.KW_AUTHOR)
+    {
+        switch (cur.type)
+        {
+            case TokenType.KW_VERSION:
+                consume(tokens, pos, TokenType.KW_VERSION);
+                version  = malloc(ASTNode.sizeof);
+                *version = { NodeType.VERSION, { .version_node = { .type = VersionType.EXACT, .exact_version = current(tokens, *pos).value } } };
+                consume(tokens, pos, TokenType.VERSION);
 
-    consume(tokens, pos, TokenType.VERSION);
+                if (current(tokens, *pos).type == TokenType.KW_AUTHOR)
+                {
+                    consume(tokens, pos, TokenType.KW_AUTHOR);
+                    author = parse_string(tokens, pos);
+                }
+            case TokenType.KW_AUTHOR:
+                consume(tokens, pos, TokenType.KW_AUTHOR);
+                author = parse_string(tokens, pos);
+
+                if (current(tokens, *pos).type == TokenType.VERSION)
+                {
+                    consume(tokens, pos, TokenType.KW_VERSION);
+                    version  = malloc(ASTNode.sizeof);
+                    *version = { NodeType.VERSION, { .version_node = { .type = VersionType.EXACT, .exact_version = current(tokens, *pos).value } } };
+                    consume(tokens, pos, TokenType.VERSION);
+                }
+        }
+    }
+
     consume(tokens, pos, TokenType.RPAREN);
 
-    *node = { NodeType.PROJECT, { .project_node = { name, version } } };
+    *node = { NodeType.PROJECT, { .project_node = { name, version, author } } };
     return node;
 }
 

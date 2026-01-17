@@ -136,6 +136,7 @@ fn Token ident(String content, int* pos, int line, int* col) => @pool()
         case "LINK":     return { KW_LINK,    value, { line, column } };
         case "DIR":      return { KW_DIR,     value, { line, column } };
         case "FILE":     return { KW_FILE,    value, { line, column } };
+        case "AUTHOR":   return { KW_AUTHOR,  value, { line, column } };
         case "compiler": return { COMPILER,   value, { line, column } };
         case "project":  return { PROJECT,    value, { line, column } };
         case "require":  return { REQUIRE,    value, { line, column } };

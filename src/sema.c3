@@ -14,6 +14,7 @@ struct ProjectInfo
 {
     String                          name;
     String                          version;
+    String                          author;
     HashMap{String, char*}          variables;
     HashMap{String, List{ASTNode*}} tasks;
     List{String}                    options;
@@ -101,10 +102,8 @@ fn void analyse_project(ASTNode* node_in, ProjectInfo* info)
 {
     ProjectNode node    = node_in.node.project_node;
     String      name    = node.name;
-    VersionNode version = node.version.node.version_node;
 
-    if (info.name    != "" &&
-        info.version != "")
+    if (info.name != "")
     {
         io::print(Ansi.YELLOW);
         io::print("[c3build] project already defined. >> skipping");
@@ -112,7 +111,8 @@ fn void analyse_project(ASTNode* node_in, ProjectInfo* info)
     } else
     {
         info.name    = name;
-        info.version = version.exact_version;
+        info.version = node.version ? node.version.node.version_node.exact_version : "";
+        info.author  = node.author ? node.author.node.string_node.value : "";
     }
 }
 

@@ -128,6 +128,8 @@ fn void visit_program(ASTNode* node_in, ProjectInfo* info)
 {
     ProgramNode node = node_in.node.program_node;
 
+    String injected = util::inject_project_info(info);
+
     List{String} command;
     command.push(util::get_compiler());
     command.push("compile");
@@ -184,6 +186,11 @@ fn void visit_program(ASTNode* node_in, ProjectInfo* info)
     {
         io::eprintn((ZString)&stderr_buf);
     }
+
+    if (injected != "")
+    {
+        file::delete(injected)!!;
+    }
 }
 
 fn void visit_print(ASTNode* node_in, ProjectInfo* info)
@@ -213,11 +220,17 @@ fn void visit_copy(ASTNode* node_in, ProjectInfo* info)
             if (catch result = util::cpdir(f_source, f_dest))
             {
                 io::printfn("[c3build] unable to copy directory `%s` -> `%s`: %s", f_source, f_dest, result);
+            } else
+            {
+                io::printfn("[c3build] copied directory `%s` -> `%s`", f_source, f_dest);
             }
         case "FILE":
             if (catch result = util::copy_file(f_source, f_dest))
             {
                 io::printfn("[c3build] unable to copy file `%s` -> `%s`: %s", f_source, f_dest, result);
+            } else
+            {
+                io::printfn("[c3build] copied file `%s` -> `%s`", f_source, f_dest);
             }
     }
 }

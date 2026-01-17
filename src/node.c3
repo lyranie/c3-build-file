@@ -82,6 +82,7 @@ struct ProjectNode
 {
     String   name;
     ASTNode* version;
+    ASTNode* author;
 }
 
 struct RequireNode

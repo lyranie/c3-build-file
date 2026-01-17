@@ -44,28 +44,26 @@ fn int main(String[] args)
 
     ProjectInfo info;
 
-    info.variables.set("HOME",    path::home_directory(mem)!!.str_view().zstr_copy(mem));
-    info.variables.set("PROJECT", null);
-    info.variables.set("VERSION", null);
+    info.variables.set("HOME",       path::home_directory(mem)!!.str_view().zstr_copy(mem));
+    info.variables.set("PROJECT",    null);
+    info.variables.set("VERSION",    null);
+    info.variables.set("AUTHOR",     null);
     info.variables.set("OS_WINDOWS", null);
-    info.variables.set("OS_DARWIN", null);
-    info.variables.set("OS_LINUX", null);
+    info.variables.set("OS_DARWIN",  null);
+    info.variables.set("OS_LINUX",   null);
     
-    $if env::WIN32:
-        info.variables.set("OS_WINDOWS", "");
-    $else $if env::DARWIN:
-        info.variables.set("OS_DARWIN", "");
-    $else $if env::LINUX:
-        info.variables.set("OS_LINUX", "");
+    $if       env::WIN32:  info.variables.set("OS_WINDOWS", "");
+    $else $if env::DARWIN: info.variables.set("OS_DARWIN", "");
+    $else $if env::LINUX:  info.variables.set("OS_LINUX", "");
     $endif $endif $endif
     
     sema::analyse(nodes, &info);
 
     info.variables.set("PROJECT", info.name);
     info.variables.set("VERSION", info.version);
+    info.variables.set("AUTHOR",  info.author);
 
-    if (info.name    == "" ||
-        info.version == "")
+    if (info.name == "")
     {
         io::eprint(Ansi.RED);
         io::eprint("[c3build] project not defined. >> aborting");
@@ -149,8 +147,15 @@ fn void print_tasks(ProjectInfo info)
 
 fn void print_version()
 {
-    io::printfn("Version:        %s", version::VERSION);
+    if (version::VERSION != "")
+    {
+        io::printfn("Version:        %s", version::VERSION);
+    }
     $if $feature(GIT_HASH):
     io::printfn("Git Hash:       %s", version::GIT_HASH);
     $endif
+    if (version::AUTHOR != "")
+    {
+        io::printfn("Author:         %s", version::AUTHOR);
+    }
 }

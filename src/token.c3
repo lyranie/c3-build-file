@@ -31,6 +31,7 @@ enum TokenType : const inline String
     KW_LINK    = "LINK",
     KW_DIR     = "DIR",
     KW_FILE    = "FILE",
+    KW_AUTHOR  = "AUTHOR",
 
     COMPILER   = "compiler",
     PROJECT    = "project",

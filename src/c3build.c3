@@ -1,5 +1,6 @@
 module version;
 
-const VERSION = "0.2.2";
+const VERSION = "@@VERSION@@";
+const AUTHOR  = "@@AUTHOR@@";
 
 $exec(`echo "const GIT_HASH = \"$(git rev-parse HEAD)\";"`);

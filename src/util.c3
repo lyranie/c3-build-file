@@ -111,8 +111,6 @@ fn void? copy_file(String source, String dest)
     char[] data = file::load(mem, source)!;
 
     file::save(dest, data)!;
-
-    io::printfn("[c3build] copied file `%s` -> `%s`", source, dest);
 }
 
 fn String format(String string, ProjectInfo* info)
@@ -169,3 +167,26 @@ fn void add_files(List{ASTNode*} paths, ProjectInfo* info)
 }
 
 fn String String.join(self, String other) => string::format(mem, "%s%c%s", self, path::PREFERRED_SEPARATOR, other);
+
+fn String inject_project_info(ProjectInfo* info)
+{
+    foreach (file : info.files)
+    {
+        if (file.ends_with(string::format(mem, "%c%s", path::PREFERRED_SEPARATOR, "c3build.c3")))
+        {
+            String dest             = string::format(mem, "%s.injected.c3", file);
+            String injected_content = ((String)file::load(mem, file)!!)
+                                                .replace(mem, "@@VERSION@@", info.version)
+                                                .replace(mem, "@@AUTHOR@@", info.author);
+
+            file::save(dest, injected_content)!!;
+            
+            info.files.remove_item(file);
+            info.files.push(dest);
+            
+            return dest;
+        }
+    }
+
+    return "";
+}
