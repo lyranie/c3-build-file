@@ -144,14 +144,9 @@ fn void analyse_find(ASTNode* node_in, ProjectInfo* info)
     String   type = node.type;
     String   name = node.name.node.string_node.value;
 
-    Type filetype = enum_by_name(Type, type)!!;
+    String var_name = string::format(mem, "%s_%s", type.to_lower_copy(mem), name.to_lower_copy(mem).replace(mem, "-", "_"));
 
-    String  var_name  = string::format(mem, "%s_%s", type.to_lower_copy(mem), name.to_lower_copy(mem).replace(mem, "-", "_"));
-
-    if (try var_value = fs::find(name, filetype))
-    {
-        info.variables.set(var_name, var_value);
-    }
+    info.variables.set(var_name, null);
 }
 
 fn void analyse_ifdef(ASTNode* node_in, ProjectInfo* info)

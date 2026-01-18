@@ -1,3 +1,6 @@
+# 0.3.6
+- fix `find()` not populating variable if not found
+
 # 0.3.5
 - add `$feature(GIT_HASH)` to `$exec` statements
 
