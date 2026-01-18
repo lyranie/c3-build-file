@@ -4,9 +4,11 @@ import std::io;
 import std::os;
 import std::collections::map;
 import std::collections::list;
+import std::core::string::ansi;
 import regex;
 import sema;
 import node;
+import fs;
 
 HashMap{String,int} versions;
 
@@ -31,13 +33,16 @@ fn void versions_init()
 
 fn String get_compiler()
 {
-    $switch:
-    $case env::WIN32:
-        return "c3c.exe";
-    $case env::DARWIN:
-    $case env::LINUX:
-        return "c3c";
-    $endswitch
+    String? compiler = fs::find("c3c", Type.EXE);
+    if (catch compiler)
+    {
+        io::eprint(Ansi.RED);
+        io::eprint("Unable to locate c3 compiler.");
+        io::eprintn(Ansi.RESET);
+        os::exit(1);
+    }
+
+    return compiler;
 }
 
 fn bool is_version_in_range(String min_version, String max_version, String version)

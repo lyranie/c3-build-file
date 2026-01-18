@@ -70,6 +70,8 @@ fn String? find(String filename, Type type)
         thread_data[i].match    = "";
 
         threads[i].create(&search_thread, &thread_data[i])!;
+
+        current_start += thread_dir_count;
     }
 
     for (int i = 0; i < THREAD_COUNT; i++)
@@ -78,6 +80,8 @@ fn String? find(String filename, Type type)
     }
 
     g_mutex.destroy();
+
+    if (result == "") return EMPTY_RESULT?;
 
     return result;
 }
@@ -159,7 +163,7 @@ fn int search_thread(void* arg) => @pool_init(mem, 1024)
 
     for (int i = data.start; i < data.end; i++)
     {
-        if (data.dirs[i] == "") break;
+        if (data.dirs[i] == "") continue;
 
         int    score  = -1;
         String match  = "";
@@ -210,7 +214,8 @@ fn bool search_dir(String filename, String dir, String* result, Type type, int* 
 
     bool found = false;
 
-    PathList children = path::ls(mem, dir.to_path(mem), true, true)!!;
+    if (!file::is_dir(dir)) return false;
+    PathList children = path::ls(mem, dir.to_path(mem), true)!!;
     foreach (path : children)
     {
         String s_path = path.str_view();

@@ -1,3 +1,7 @@
+# 0.3.3
+- fix find logic for searching directories
+- fix folder distribution across threads for find file logic
+
 # 0.3.2
 - add bootstrap scripts
 - update string lexing logic
